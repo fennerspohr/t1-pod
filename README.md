@@ -4,7 +4,8 @@ gerar arquivo com números aleatórios:\
 
 rodar o programa\
 !!IMPORTANTE!!
-define tam -> quantos números vao ser lidos (tem que ser igual ao tamanho do geraN)
+define tam -> quantos números vao ser lidos (tem que ser igual ao tamanho do geraN)\
+define maxNum -> {valor máximo dos números} +1\
 
 `gcc -o bucket bucket-selecao.c`\
 `./bucket`\
