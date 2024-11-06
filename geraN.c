@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
   }
   val++;
   for(i=0; i<N; i++)
-    printf("%u\n", (unsigned int) random()%val);
+    printf("%u\n", (unsigned int) (random()%(val-1))+1);
 
   exit(0);
 }
