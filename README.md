@@ -7,6 +7,9 @@ rodar o programa\
 define tam -> quantos números vao ser lidos (tem que ser igual ao tamanho do geraN)\
 define maxNum -> {valor máximo dos números} +1\
 
-`gcc -o bucket bucket-selecao.c`\
-`./bucket`\
+opções de sort dos buckets:\
+1 - quick sort
+
+`gcc -o bucket bucket.c`\
+`./bucket {método de sort dos buckets}`\
 

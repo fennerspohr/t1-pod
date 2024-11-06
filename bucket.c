@@ -1,21 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#define maxNum 1001 // Maior numero do range
+#define maxNum 1001 // Maior numero do range + 1
 #define numBaldes 10 // Numero de baldes
 #define tam 1000 // Quantidade de numeros a serem ordenados
 
-
-/* E estrutura do balde e formada por:
-*  vetor que tem os numeros do balde
-*  a ultima posicao que foi inserido o elemento
-*/
 typedef struct balde
 {
-    int vet[tam];
-    int ultimo;
+    int vet[tam]; //vetor com os números do balde
+    int ultimo; //indice livre do vetor
 } Balde;
 
+//leitura do arquivo
 void read_ints (const char* file_name, int valores[])
 {
     FILE* file = fopen (file_name, "r");
@@ -34,12 +30,13 @@ void read_ints (const char* file_name, int valores[])
 
 void inserir(Balde baldes[], int num)
 {
-    //encontra o intervalo ao qual o numero pertence de acordo com o numero de baldes e o número mais alto; divide igualemente de acordo com o numero de buckets
-    int pos = ((num) * (numBaldes)/(maxNum)); //a posição é o valor * o numero total de baldes / pelo número mais alto;
+    //encontra o intervalo ao qual o numero pertence de acordo com o numero de baldes e o número mais alto; divide igualmente de acordo com o numero de buckets
+    int pos = ((num) * (numBaldes)/(maxNum)); //a posição é o valor * o numero total de baldes / pelo número mais alto + 1;
     baldes[pos].vet[baldes[pos].ultimo] = num; //o valor é guardado na próxima posição livre do vetor de valores do balde
     baldes[pos].ultimo++; //aumenta o índice do vetor de valores
 }
-// Funcao para a odenacao dos baldes
+
+// Funcao para a odenacao dos baldes com quick sort
 int compare(const void * a, const void * b)
 {
     if ( *(int*)a <  *(int*)b ) return -1; //elemento a vai antes de b
@@ -47,41 +44,44 @@ int compare(const void * a, const void * b)
     if ( *(int*)a >  *(int*)b ) return 1; // elemento a vai depois de b
 }
 
-void ordenaBalde(Balde *baldes)
+void ordenaBalde(Balde *baldes, int argc)
 {
-    for (int i = 0; i < numBaldes; i++)
-        qsort(baldes[i].vet, tam, sizeof(int), compare);
+    if(argc==1){ //quick sort
+        for (int i = 0; i < numBaldes; i++)
+            qsort(baldes[i].vet, tam, sizeof(int), compare);
+    }
+
 }
 
 
-int main(){
-
+int main(int argc){
     const char file_name[11] = "output.txt";
-//o vetor de valores tem o tamanho especificado no comando da função
+    //o vetor de valores tem o tamanho especificado no comando da função
     int valores[tam];
     read_ints(file_name,  valores); //le os valores do arquivo
-
-    for(int i = 0; i <tam; i++){
+    for(int i = 0; i <tam; i++){ //imprime os valores aleatórios
         printf("%d ,", valores[i]);
     }
-
     // alocacao dos baldes
-    Balde baldes[numBaldes] = {0};
+    Balde baldes[numBaldes] = {0}; //inicializados em 0
 
     for(int i = 0; i < numBaldes; i++)
     {
         baldes[i].ultimo  = 0; //seta o último indice do vetor de valores do balde como 0
     }
 
-    clock_t begin = clock();
-    // insercao de cada elemento do array arr no balde correto
+    clock_t begin = clock(); //começa a contar o tempo
+
+    // insercao de cada elemento do array valores no balde correto
     for (int i = 0; i < tam; i++) {
         inserir(baldes, valores[i]);
     }
     // ordenacao dos baldes
-    ordenaBalde(baldes);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    ordenaBalde(baldes, argc);
+
+    clock_t end = clock(); //termina de contar o tempo
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC; //tempo de execução
 
     // insercao dos elementos ordenados no vetor final
 
@@ -92,7 +92,7 @@ int main(){
     {
         for (int j = 0; j < tam; j++)
         {
-            if (baldes[i].vet[j] != 0)
+            if (baldes[i].vet[j] != 0) //o array de números aleatórios não possui nenhum 0, portanto todos os 0 que estiverem no vetor dos baldes são espaços vazios
             {
                 vetFinal[k] = baldes[i].vet[j];
                 k++;
