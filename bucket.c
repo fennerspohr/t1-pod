@@ -3,12 +3,12 @@
 #include <time.h>
 #include "quicksort.h"
 #define maxNum 1001 // Maior numero do range + 1
-#define numBaldes 10 // Numero de baldes
-#define tam 1000 // Quantidade de numeros a serem ordenados
+#define numBaldes 20 // Numero de baldes
+#define tam 500000 // Quantidade de numeros a serem ordenados
 
 typedef struct balde
 {
-    int vet[tam]; //vetor com os números do balde
+    int* vet; //vetor com os números do balde
     int ultimo; //indice livre do vetor
 } Balde;
 
@@ -59,20 +59,21 @@ void ordenaBalde(Balde *baldes, int tipo)
 int main(){
     const char file_name[99] = "/home/evergreenis/Documentos/2024-2/pod/t1-pod/output.txt";
     //o vetor de valores tem o tamanho especificado no comando da função
-    int valores[tam];
+    int* valores = calloc(tam, sizeof(int));
     read_ints(file_name,  valores); //le os valores do arquivo
-    for(int i = 0; i <tam; i++){ //imprime os valores aleatórios
-        printf("%d ,", valores[i]);
-    }
+//    for(int i = 0; i <tam; i++){ //imprime os valores aleatórios
+//        printf("%d ,", valores[i]);
+//    }
 
     int tipo;
     printf("Qual tipo de sort deseja utilizar?\n1)Quick sort\n");
     scanf("%d", &tipo);
     // alocacao dos baldes
-    Balde baldes[numBaldes] = {0}; //inicializados em 0
+    Balde* baldes = malloc(tam*sizeof(Balde)); //inicializados em 0
 
     for(int i = 0; i < numBaldes; i++)
     {
+        baldes[i].vet = calloc(tam, sizeof (int));
         baldes[i].ultimo  = 0; //seta o último indice do vetor de valores do balde como 0
     }
 
@@ -82,6 +83,8 @@ int main(){
     for (int i = 0; i < tam; i++) {
         inserir(baldes, valores[i]);
     }
+
+    free(valores);
     // ordenacao dos baldes
     ordenaBalde(baldes, tipo);
 
@@ -91,7 +94,7 @@ int main(){
 
     // insercao dos elementos ordenados no vetor final
 
-    int vetFinal[tam] = {0};
+    int* vetFinal = calloc(tam, sizeof(int));
 
     int k = 0;
     for (int i = 0; i < numBaldes; i++)
@@ -114,6 +117,8 @@ int main(){
     printf("\n\n");
 
     printf("Tempo de execução:%f.\n", time_spent);
+
+
 
     return 0;
 }
