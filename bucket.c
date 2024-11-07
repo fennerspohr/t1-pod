@@ -118,7 +118,10 @@ int main(){
 
     printf("Tempo de execução:%f.\n", time_spent);
 
-
+    free(vetFinal);
+    for (int i =0; i< numBaldes; i++)
+        free(baldes[i].vet);
+    free(baldes);
 
     return 0;
 }
