@@ -10,6 +10,6 @@ define maxNum -> {valor máximo dos números} +1\
 opções de sort dos buckets:\
 1 - quick sort
 
-`gcc -o bucket bucket.c`\
-`./bucket {método de sort dos buckets}`\
+`gcc -o bucket bucket.c quicksort.c`\
+`./bucket`\
 

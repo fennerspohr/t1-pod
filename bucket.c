@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "quicksort.h"
 #define maxNum 1001 // Maior numero do range + 1
 #define numBaldes 10 // Numero de baldes
 #define tam 1000 // Quantidade de numeros a serem ordenados
@@ -44,24 +45,29 @@ int compare(const void * a, const void * b)
     if ( *(int*)a >  *(int*)b ) return 1; // elemento a vai depois de b
 }
 
-void ordenaBalde(Balde *baldes, int argc)
+void ordenaBalde(Balde *baldes, int tipo)
 {
-    if(argc==1){ //quick sort
-        for (int i = 0; i < numBaldes; i++)
-            qsort(baldes[i].vet, tam, sizeof(int), compare);
+    if(tipo==1){ //quick sort
+        for (int i = 0; i < numBaldes; i++){
+            initial_quick(baldes[i].vet, 0, tam-1);
+        }
     }
 
 }
 
 
-int main(int argc){
-    const char file_name[11] = "output.txt";
+int main(){
+    const char file_name[99] = "/home/evergreenis/Documentos/2024-2/pod/t1-pod/output.txt";
     //o vetor de valores tem o tamanho especificado no comando da função
     int valores[tam];
     read_ints(file_name,  valores); //le os valores do arquivo
     for(int i = 0; i <tam; i++){ //imprime os valores aleatórios
         printf("%d ,", valores[i]);
     }
+
+    int tipo;
+    printf("Qual tipo de sort deseja utilizar?\n1)Quick sort\n");
+    scanf("%d", &tipo);
     // alocacao dos baldes
     Balde baldes[numBaldes] = {0}; //inicializados em 0
 
@@ -77,7 +83,7 @@ int main(int argc){
         inserir(baldes, valores[i]);
     }
     // ordenacao dos baldes
-    ordenaBalde(baldes, argc);
+    ordenaBalde(baldes, tipo);
 
     clock_t end = clock(); //termina de contar o tempo
 
