@@ -115,6 +115,20 @@ void mergeSort(int arr[], int left, int right) {
         merge(arr, left, mid, right);
     }
 }
+
+void insertionfunc(int baldes[], int n){
+
+    for(int i = 1;i < n; i++) {
+        int j = i;
+        while(j > 0 && baldes[j] < baldes[j-1]) {
+            int temp = baldes[j];
+            baldes[j] = baldes[j-1];
+            baldes[j-1] = temp;
+            j--;
+        }
+    }
+}
+
 void inserir(Balde baldes[], int num)
 {
     //encontra o intervalo ao qual o numero pertence de acordo com o numero de baldes e o número mais alto; divide igualmente de acordo com o numero de buckets
@@ -130,14 +144,19 @@ void ordenaBalde(Balde *baldes, int tipo)
             initial_quick(baldes[i].vet, 0, tam-1);
         }
     }
-    else if(tipo ==2){
+    else if(tipo ==2){ //selection sort
         for(int i = 0; i < numBaldes; i++){
             selectionSort(baldes[i].vet);
         }
     }
-    else if(tipo == 3){
+    else if(tipo == 3){ //merge sort
         for(int i= 0; i < numBaldes; i++){
             mergeSort(baldes[i].vet, 0, tam-1);
+        }
+    }
+    else if(tipo == 4){ //insertion sort
+        for (int i = 0; i < numBaldes; i++){
+            insertionfunc(baldes[i].vet,tam);
         }
     }
 
