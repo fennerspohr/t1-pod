@@ -3,8 +3,8 @@
 #include <time.h>
 #include "quicksort.h"
 #define maxNum 1001 // Maior numero do range + 1
-#define numBaldes 10 // Numero de baldes
-#define tam 1000 // Quantidade de numeros a serem ordenados
+#define numBaldes 100 // Numero de baldes
+#define tam 100000 // Quantidade de numeros a serem ordenados
 
 typedef struct balde
 {
@@ -163,7 +163,7 @@ void ordenaBalde(Balde *baldes, int tipo)
 }
 
 int main(){
-    const char file_name[99] = "/home/evergreenis/Documentos/2024-2/pod/t1-pod/output.txt";
+    const char file_name[99] = "output.txt";
     //o vetor de valores tem o tamanho especificado no comando da função
     int* valores = calloc(tam, sizeof(int));
     read_ints(file_name,  valores); //le os valores do arquivo
