@@ -6,7 +6,7 @@ dica: dá pra gerar um arquivo com o número máximo de valores que vão ser ord
 
 rodar o programa\
 !!IMPORTANTE!!
-define tam -> quantos números vao ser lidos (tem que ser igual ao tamanho do geraN)\
+define tam -> quantos números vao ser lidos (tem que ser igual ou menor que o tamanho do geraN)\
 define maxNum -> {valor máximo dos números} +1\
 
 opções de sort dos buckets:\
