@@ -3,8 +3,8 @@
 #include <time.h>
 #include "quicksort.h"
 #define maxNum 1001 // Maior numero do range + 1
-#define numBaldes 20 // Numero de baldes
-#define tam 500000 // Quantidade de numeros a serem ordenados
+#define numBaldes 10 // Numero de baldes
+#define tam 1000 // Quantidade de numeros a serem ordenados
 
 typedef struct balde
 {
@@ -29,20 +29,98 @@ void read_ints (const char* file_name, int valores[])
     fclose (file);
 }
 
+void selectionSort(int arr[]) {
+    for (int i = 0; i < tam - 1; i++) {
+
+        // Assume the current position holds
+        // the minimum element
+        int min_idx = i;
+
+        // Iterate through the unsorted portion
+        // to find the actual minimum
+        for (int j = i + 1; j < tam; j++) {
+            if (arr[j] < arr[min_idx]) {
+
+                // Update min_idx if a smaller element is found
+                min_idx = j;
+            }
+        }
+
+        // Move minimum element to its
+        // correct position
+        int temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+}
+// Merges two subarrays of arr[].
+// First subarray is arr[left..mid]
+// Second subarray is arr[mid+1..right]
+void merge(int arr[], int left, int mid, int right) {
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // Create temporary arrays
+    int leftArr[n1], rightArr[n2];
+
+    // Copy data to temporary arrays
+    for (i = 0; i < n1; i++)
+        leftArr[i] = arr[left + i];
+    for (j = 0; j < n2; j++)
+        rightArr[j] = arr[mid + 1 + j];
+
+    // Merge the temporary arrays back into arr[left..right]
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2) {
+        if (leftArr[i] <= rightArr[j]) {
+            arr[k] = leftArr[i];
+            i++;
+        }
+        else {
+            arr[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of leftArr[], if any
+    while (i < n1) {
+        arr[k] = leftArr[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of rightArr[], if any
+    while (j < n2) {
+        arr[k] = rightArr[j];
+        j++;
+        k++;
+    }
+}
+
+// The subarray to be sorted is in the index range [left-right]
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        // Calculate the midpoint
+        int mid = left + (right - left) / 2;
+
+        // Sort first and second halves
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        // Merge the sorted halves
+        merge(arr, left, mid, right);
+    }
+}
 void inserir(Balde baldes[], int num)
 {
     //encontra o intervalo ao qual o numero pertence de acordo com o numero de baldes e o número mais alto; divide igualmente de acordo com o numero de buckets
     int pos = ((num) * (numBaldes)/(maxNum)); //a posição é o valor * o numero total de baldes / pelo número mais alto + 1;
     baldes[pos].vet[baldes[pos].ultimo] = num; //o valor é guardado na próxima posição livre do vetor de valores do balde
     baldes[pos].ultimo++; //aumenta o índice do vetor de valores
-}
-
-// Funcao para a odenacao dos baldes com quick sort
-int compare(const void * a, const void * b)
-{
-    if ( *(int*)a <  *(int*)b ) return -1; //elemento a vai antes de b
-    if ( *(int*)a == *(int*)b ) return 0; // elemento a e b são iguais
-    if ( *(int*)a >  *(int*)b ) return 1; // elemento a vai depois de b
 }
 
 void ordenaBalde(Balde *baldes, int tipo)
@@ -52,21 +130,27 @@ void ordenaBalde(Balde *baldes, int tipo)
             initial_quick(baldes[i].vet, 0, tam-1);
         }
     }
+    else if(tipo ==2){
+        for(int i = 0; i < numBaldes; i++){
+            selectionSort(baldes[i].vet);
+        }
+    }
+    else if(tipo == 3){
+        for(int i= 0; i < numBaldes; i++){
+            mergeSort(baldes[i].vet, 0, tam-1);
+        }
+    }
 
 }
-
 
 int main(){
     const char file_name[99] = "/home/evergreenis/Documentos/2024-2/pod/t1-pod/output.txt";
     //o vetor de valores tem o tamanho especificado no comando da função
     int* valores = calloc(tam, sizeof(int));
     read_ints(file_name,  valores); //le os valores do arquivo
-//    for(int i = 0; i <tam; i++){ //imprime os valores aleatórios
-//        printf("%d ,", valores[i]);
-//    }
 
     int tipo;
-    printf("Qual tipo de sort deseja utilizar?\n1)Quick sort\n");
+    printf("Qual tipo de sort deseja utilizar?\n1)Quick sort\n2)Selection sort\n3)Merge sort\n");
     scanf("%d", &tipo);
     // alocacao dos baldes
     Balde* baldes = malloc(tam*sizeof(Balde)); //inicializados em 0
