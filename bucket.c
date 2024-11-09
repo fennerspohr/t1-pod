@@ -3,7 +3,7 @@
 #include <time.h>
 #define maxNum 1001 // Maior numero do range + 1
 #define numBaldes 100 // Numero de baldes
-#define tam 100000 // Quantidade de numeros a serem ordenados
+#define tam 100000000 // Quantidade de numeros a serem ordenados
 
 typedef struct balde
 {
@@ -27,101 +27,98 @@ void read_ints (const char* file_name, int valores[])
     }
     fclose (file);
 }
+//organiza o heap
 void heapify(int arr[], int n, int i) {
 
-    // Initialize largest as root
+    // Inicializa o maior como sendo o pai i
     int largest = i;
 
-    // left index = 2*i + 1
+    // nó filho da esquerda
     int l = 2 * i + 1;
 
-    // right index = 2*i + 2
+    // nó filho da direita
     int r = 2 * i + 2;
 
-    // If left child is larger than root
+    // se o filho da esquerda for maior que o pai
     if (l < n && arr[l] > arr[largest]) {
         largest = l;
     }
 
-    // If right child is larger than largest so far
+    // se o filho da direita for maior que o pai
     if (r < n && arr[r] > arr[largest]) {
         largest = r;
     }
 
-    // If largest is not root
+    // se o maior valor não é o pai
     if (largest != i) {
+        //coloca o maior valor na posição do pai
         int temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
 
-        // Recursively heapify the affected sub-tree
+        // recursivamente organiza em heap a sub-árvore afetada
         heapify(arr, n, largest);
     }
 }
-
-// Main function to do heap sort
+//função principal do heap sort
 void heapSort(int arr[], int n) {
 
-    // Build heap (rearrange array)
+    // Constrói o heap reorganizando o array
     for (int i = n / 2 - 1; i >= 0; i--) {
         heapify(arr, n, i);
     }
+    //No heap, o maior valor fica na posição 0; para cada posição i, seu nó filho da esquerda está em 2i+1 e seu nó filho
+    //da direita está em 2i+2
 
-    // One by one extract an element from heap
+    // Extrai os elementos do heap e coloca em sua posição correta no array
     for (int i = n - 1; i > 0; i--) {
 
-        // Move current root to end
+        // Move o maior valor atual para o final do array
         int temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
 
-        // Call max heapify on the reduced heap
+        // Reorganiza o array restante em um heap reduzido
         heapify(arr, i, 0);
     }
 }
-
 void selectionSort(int arr[]) {
+    //percorre o array encontrando o menor valor entre i e tam-1 e colocando-o na posição i
     for (int i = 0; i < tam - 1; i++) {
 
-        // Assume the current position holds
-        // the minimum element
+        //assume que a posição atual tem o menor valor
         int min_idx = i;
 
-        // Iterate through the unsorted portion
-        // to find the actual minimum
+        //itera pela parte não ordenada para encontrar o mínimo real
         for (int j = i + 1; j < tam; j++) {
             if (arr[j] < arr[min_idx]) {
 
-                // Update min_idx if a smaller element is found
+                //atualiza o índice do mínimo se um valor menor for encontrado
                 min_idx = j;
             }
         }
 
-        // Move minimum element to its
-        // correct position
+        //move o elemento mínimo para sua posição correta (i)
         int temp = arr[i];
         arr[i] = arr[min_idx];
         arr[min_idx] = temp;
     }
 }
-// Merges two subarrays of arr[].
-// First subarray is arr[left..mid]
-// Second subarray is arr[mid+1..right]
+//junta as duas metades do array
 void merge(int arr[], int left, int mid, int right) {
     int i, j, k;
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    // Create temporary arrays
+    // arrays temporários
     int leftArr[n1], rightArr[n2];
 
-    // Copy data to temporary arrays
     for (i = 0; i < n1; i++)
         leftArr[i] = arr[left + i];
     for (j = 0; j < n2; j++)
         rightArr[j] = arr[mid + 1 + j];
 
-    // Merge the temporary arrays back into arr[left..right]
+    // junta os arrays temporários de volta em arr[left...right] do menor elemento para o maior
     i = 0;
     j = 0;
     k = left;
@@ -137,40 +134,40 @@ void merge(int arr[], int left, int mid, int right) {
         k++;
     }
 
-    // Copy the remaining elements of leftArr[], if any
+    //copia os elementos restantes dos arrays temporários, se existirem
     while (i < n1) {
         arr[k] = leftArr[i];
         i++;
         k++;
     }
 
-    // Copy the remaining elements of rightArr[], if any
     while (j < n2) {
         arr[k] = rightArr[j];
         j++;
         k++;
     }
 }
-
-// The subarray to be sorted is in the index range [left-right]
+//função principal do merge sort
 void mergeSort(int arr[], int left, int right) {
+    //divide o array em partes cada vez menores e as ordena para depois uni-las
     if (left < right) {
-        // Calculate the midpoint
+        //acha o meio
         int mid = left + (right - left) / 2;
 
-        // Sort first and second halves
+        //ordena as metades
         mergeSort(arr, left, mid);
         mergeSort(arr, mid + 1, right);
 
-        // Merge the sorted halves
+        //junta as metades
         merge(arr, left, mid, right);
     }
 }
-
 void insertionfunc(int baldes[], int n){
 
+    //percorre o vetor iterativamente comparando os elementos de dois em dois
     for(int i = 1;i < n; i++) {
         int j = i;
+
         while(j > 0 && baldes[j] < baldes[j-1]) {
             int temp = baldes[j];
             baldes[j] = baldes[j-1];
@@ -179,7 +176,7 @@ void insertionfunc(int baldes[], int n){
         }
     }
 }
-
+//coloca os valores nos baldes
 void inserir(Balde baldes[], int num)
 {
     //encontra o intervalo ao qual o numero pertence de acordo com o numero de baldes e o número mais alto; divide igualmente de acordo com o numero de buckets
@@ -187,12 +184,11 @@ void inserir(Balde baldes[], int num)
     baldes[pos].vet[baldes[pos].ultimo] = num; //o valor é guardado na próxima posição livre do vetor de valores do balde
     baldes[pos].ultimo++; //aumenta o índice do vetor de valores
 }
-
+//ordena cada balde de acordo com o algoritmo escolhido
 void ordenaBalde(Balde *baldes, int tipo)
 {
     if(tipo==1){ //quick sort
         for (int i = 0; i < numBaldes; i++){
-//            initial_quick(baldes[i].vet, 0, tam-1);
             heapSort(baldes[i].vet, tam);
         }
     }
@@ -239,7 +235,8 @@ int main(){
         inserir(baldes, valores[i]);
     }
 
-    free(valores);
+    free(valores); // libera o vetor original de valores pois todos já estão nos baldes
+
     // ordenacao dos baldes
     ordenaBalde(baldes, tipo);
 
@@ -264,12 +261,6 @@ int main(){
 
         }
     }
-
-    printf("\nVet Final:\n");
-
-    for (int i = 0; i < tam; i++)
-        printf("%d ", vetFinal[i]);
-    printf("\n\n");
 
     printf("Tempo de execução:%f.\n", time_spent);
 
